@@ -10,7 +10,6 @@ terraform {
       storage_account_name = "stogeacuaes"
       container_name       = "tfbackend"
       key                  = "terraform.tfstate"
-      sas_token 	   = "sp=racwdl&st=2025-03-03T15:09:01Z&se=2025-03-03T23:09:01Z&spr=https&sv=2022-11-02&sr=c&sig=Z6BcYmcDD8q3RiN1k2fs0Qc2hH0KRxiE8GtK0rsvWsQ%3D"
   }
 
 }
