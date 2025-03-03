@@ -1,3 +1,20 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~>3.0"
+    }
+  }
+  backend "azurerm" {
+      resource_group_name  = "Artiom_RG1"
+      storage_account_name = "stogeacuaes"
+      container_name       = "tfbackend"
+      key                  = "terraform.tfstate"
+      sas_token 	   = "sp=racwdl&st=2025-03-03T15:09:01Z&se=2025-03-03T23:09:01Z&spr=https&sv=2022-11-02&sr=c&sig=Z6BcYmcDD8q3RiN1k2fs0Qc2hH0KRxiE8GtK0rsvWsQ%3D"
+  }
+
+}
+
 provider "azurerm" {
   features {}
   subscription_id = "cd1d5b6b-777a-429e-b2f5-5cbca419475a"
@@ -57,5 +74,60 @@ resource "azurerm_linux_virtual_machine" "vm" {
     offer     = "UbuntuServer"
     sku       = "18.04-LTS"
     version   = "latest"
+  }
+}
+
+
+resource "azurerm_storage_account" "sa" {
+  name                     = "stogeacuaes"
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+
+  tags = {
+    environment = "staging"
+  }
+}
+
+resource "azurerm_cosmosdb_account" "db" {
+  name                = "tfecosmodbforthe"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  offer_type          = "Standard"
+  kind                = "MongoDB"
+
+  automatic_failover_enabled = true
+
+  capabilities {
+    name = "EnableAggregationPipeline"
+  }
+
+  capabilities {
+    name = "mongoEnableDocLevelTTL"
+  }
+
+  capabilities {
+    name = "MongoDBv3.4"
+  }
+
+  capabilities {
+    name = "EnableMongo"
+  }
+
+  consistency_policy {
+    consistency_level       = "BoundedStaleness"
+    max_interval_in_seconds = 300
+    max_staleness_prefix    = 100000
+  }
+
+  geo_location {
+    location          = "uksouth"
+    failover_priority = 1
+  }
+
+  geo_location {
+    location          = "northeurope"
+    failover_priority = 0
   }
 }
