@@ -1,0 +1,4 @@
+Ensure that terrafrom and CLI are installed
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+
